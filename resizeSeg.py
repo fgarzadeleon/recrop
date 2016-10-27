@@ -1,48 +1,73 @@
 from medpy.io import load
 from medpy.io import header
+from medpy.io import save
 import numpy as np
+import recrop
 
-def crop3D(image, Coords):
-	croppedImage = None
-	if (len(image.shape)==3) & (len(Coords)==6):
-		croppedImage = image[Coords[0]:Coords[1],Coords[2]:Coords[3],Coords[4]:Coords[5]]
-		return croppedImage
-	else:
-		print "The array or coordenates do not have 3 dimensions"
-		return croppedImage
-
-def uncrop3D(image, Coords, originalSize):
+def reconstruct_3D(*arg):
 	uncroppedImage = None
-	if (len(image.shape)==3) & (len(Coords)==6) & (len(originalSize)==3):
-		if (Coords[0]<originalSize[0]) & (Coords[1]<originalSize[0]) & (Coords[2]<originalSize[1]) & (Coords[3]<originalSize[1]) & (Coords[4]<originalSize[2]) & (Coords[5]<originalSize[2]): 
-			uncroppedImage = np.zeros(originalSize)
-			uncroppedImage[Coords[0]:Coords[1],Coords[2]:Coords[3],Coords[4]:Coords[5]] = image
-			return uncroppedImage
+	if (len(arg)==2):
+		image_data, image_header = load(arg[0])
+		imageSegmentation_data, imageSegmentation_header = load(arg[1])
+		# Coords = image_header get coordenates from header
+		if (len(image_data.shape)==3) & (all(np.greater(image_data.shape,imageSegmentation_data.shape))):
+			croppedImage = image_data[Coords[0]:Coords[1],Coords[2]:Coords[3],Coords[4]:Coords[5]]
+			return croppedImage
 		else:
-			return "Original size is smaller than the supplied coordenates"
-			return uncroppedImage
-	else:
-		print "The array, coordenates or original size do not have 3 dimensions"
-		return uncroppedImage		
+			print "the original image is smaller than the segmentation."	
+		
+			print "The array or coordenates do not have 3 dimensions"
+			return croppedImage
+	elif (len(arg)==3):
+		image_data, image_header = load(arg[0])
+		imageSegmentation_data, imageSegmentation_header = load(arg[1])
+		Coords = arg[2]
+		originalSize = image_data.shape
+		if (len(image_data.shape)==3) & (all(np.greater(image_data.shape,imageSegmentation_data.shape))):
+			if (Coords[0]<originalSize[0]) & (Coords[1]<originalSize[0]) & (Coords[2]<originalSize[1]) & (Coords[3]<originalSize[1]) & (Coords[4]<originalSize[2]) & (Coords[5]<originalSize[2]): 
+				uncroppedImage = np.zeros(originalSize)
+				uncroppedImage[Coords[0]:Coords[1],Coords[2]:Coords[3],Coords[4]:Coords[5]] = imageSegmentation_data
+				return uncroppedImage
+			else:
+				return "Original size is smaller than the supplied coordenates"
+				return uncroppedImage
+		else:
+			print "the original image is smaller than the segmentation."
+			print "The array or coordenates do not have 3 dimensions"
+			return croppedImage
+	elif (len(arg)<2):
+		print "Not enough arguments."
+	elif (len(arg)>3):
+		print "Too many arguments."
+	croppedImage = None
+	
 
 
+# Need to write to header
+image_file = 'lupus001_FLAIR_reg+bias.nii.gz'
+image_data, image_header = load(image_file)
 
-image_data, image_header = load('10000001_3_MRT1_wb_29662_4.nii.gz')
-imageOrig_data, imageOrig_header = load('10000001_3_MRT1_wb.nii.gz')
+coords2crop = [0,10,0,10,0,10]
+coords2crop = recrop.bbox_3D(image_data)
 
-print header.get_pixel_spacing(image_header)
 
-print header.get_offset(image_header)
+croppedImage = recrop.crop_3D(image_data, coords2crop)
 
-print header.get_pixel_spacing(imageOrig_header)
+croppedImage[:] = 21
 
-print header.get_offset(imageOrig_header)
+save(croppedImage, image_file[0:-7]+'.bbox.nii.gz', image_header)
 
-data_dim = imageOrig_data.shape
+uncroppedImage = recrop.uncrop_3D(croppedImage,coords2crop,image_data.shape)
 
-coords2crop = [5,10,5,10,5,10]
+reconstructed = reconstruct_3D('lupus001_FLAIR_reg+bias.nii.gz','lupus001_FLAIR_reg+bias.bbox.nii.gz',coords2crop)
 
-croppedImage = crop3D(imageOrig_data, coords2crop)
+save(reconstructed, image_file[0:-7]+'.rc.nii.gz', image_header)
 
-uncroppedImage = uncrop3D(croppedImage,coords2crop,image_data.shape)
 
+# OR using boundary boxes
+
+coords2crop = recrop.bbox_3D(image_data)
+
+croppedImage = recrop.crop_3D(image_data, coords2crop)
+
+uncroppedImage = recrop.uncrop_3D(croppedImage,coords2crop,image_data.shape)

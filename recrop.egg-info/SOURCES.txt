@@ -1,0 +1,7 @@
+setup.py
+recrop/__init__.py
+recrop.egg-info/PKG-INFO
+recrop.egg-info/SOURCES.txt
+recrop.egg-info/dependency_links.txt
+recrop.egg-info/not-zip-safe
+recrop.egg-info/top_level.txt

@@ -1,5 +1,11 @@
 ## recrop 
 
+Packages required `numpy`
+
+`pip install numpy`
+
+## Test file
+What we did with the file 
 ### Data 
 The data used can be found at [http://hdl.handle.net/1926/1714](http://hdl.handle.net/1926/1714)
 
