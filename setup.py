@@ -8,4 +8,5 @@ setup(name='recrop',
       author_email='fgarzadeleon@gmail.com',
       license='MIT',
       packages=['recrop'],
+      install_requires=['numpy','tmdbsimple'],
       zip_safe=False)
