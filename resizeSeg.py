@@ -57,9 +57,22 @@ print coords2crop
 
 croppedImage = recrop.crop_3D(image_data, coords2crop)
 
-croppedImage[:] = 21+croppedImage[:] 
+#croppedImage[:] = 21+croppedImage[:] 
+print header.get_pixel_spacing(image_header)
+
+croppedResampledImage, croppedResampledImage_header = recrop.resample(croppedImage, image_header,2)
 
 save(croppedImage, image_file[0:-7]+'.bbox.nii.gz', image_header)
+save(croppedResampledImage, image_file[0:-7]+'.bboxResample.nii.gz', croppedResampledImage_header)
+print 'Original:'
+print croppedImage.shape
+print 'Resampled:'
+print croppedResampledImage.shape
+
+croppedRegeneratedImage, croppedRegeneratedImage_header = recrop.resample(croppedResampledImage, croppedResampledImage_header,1.06)
+
+save(croppedRegeneratedImage, image_file[0:-7]+'.bboxRegenerated.nii.gz', croppedRegeneratedImage_header)
+
 
 uncroppedImage = recrop.uncrop_3D(croppedImage,coords2crop,image_data.shape)
 
