@@ -2,6 +2,8 @@ import numpy as np
 from scipy.ndimage.interpolation import zoom
 from medpy.io import header
 import numbers
+from medpy.io import load
+
 
 
 
@@ -73,14 +75,59 @@ def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
         
         # compute zoom values
         zoom_factors = [old / float(new) for new, old in zip(target_spacing, header.get_pixel_spacing(hdr))]
+
+        print "Zoom Factors"
+        print zoom_factors
+
+        oldImageShape = img.shape
     
         # zoom image
         img = zoom(img, zoom_factors, order=bspline_order, mode=mode)
+
+        newImageShape = img.shape
+        old_pixel_spacing = header.get_pixel_spacing(hdr)
+
+        new_pixel_spacing = np.divide(np.multiply(oldImageShape,old_pixel_spacing),newImageShape)
+
+        print "Target Pixel Spacing"
+        print target_spacing
+
+        print "Actual Pixel Spacing"
+        print new_pixel_spacing
+
+
         
         # set new voxel spacing
-        header.set_pixel_spacing(hdr, target_spacing)
+        header.set_pixel_spacing(hdr, new_pixel_spacing)
         
         return img, hdr
+
+def reconstruct_3D(*arg):
+	uncroppedImage = None
+	if (len(arg)==2):
+		return "You need to supply the bounding box coordinates"
+	elif (len(arg)==3):
+		image_data, image_header = load(arg[0])
+		imageSegmentation_data, imageSegmentation_header = load(arg[1])
+		Coords = arg[2]
+		originalSize = image_data.shape
+		if (len(image_data.shape)==3) & (all(np.greater(image_data.shape,imageSegmentation_data.shape))):
+			if (Coords[0]<originalSize[0]) & (Coords[1]<originalSize[0]) & (Coords[2]<originalSize[1]) & (Coords[3]<originalSize[1]) & (Coords[4]<originalSize[2]) & (Coords[5]<originalSize[2]): 
+				uncroppedImage = np.zeros(originalSize)
+				uncroppedImage[Coords[0]:Coords[1],Coords[2]:Coords[3],Coords[4]:Coords[5]] = imageSegmentation_data
+				return uncroppedImage
+			else:
+				return "Original size is smaller than the supplied coordenates"
+				return uncroppedImage
+		else:
+			print "the original image is smaller than the segmentation."
+			print "The array or coordenates do not have 3 dimensions"
+			return uncroppedImage
+	elif (len(arg)<2):
+		print "Not enough arguments."
+	elif (len(arg)>3):
+		print "Too many arguments."
+	croppedImage = None
 
 
 
