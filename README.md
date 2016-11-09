@@ -1,8 +1,14 @@
 ## recrop 
 
-Packages required `numpy`
+Packages required `numpy`, to install type in the command line
 
 `pip install numpy`
+
+## Install the package
+
+To install the package, type in your command line the following:
+
+`pip install recrop`
 
 ## Test file
 What we did with the file 

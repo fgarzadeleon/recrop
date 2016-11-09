@@ -8,6 +8,22 @@ from medpy.io import load
 
 
 def crop_3D(image, Coords):
+	"""
+    Crop an image image at the inputted coordenates
+        
+    Parameters
+    ----------
+    image : array_like
+        The image.
+    Coords : ndarray
+    	Coordenates of the bounding box: minimum and maximum columns, rows and 3rd dimension
+
+    Returns
+    -------
+    croppedImage : array_like
+    	The image that was cropped from the original image using the bounding box coordenates
+    
+    """
 	croppedImage = None
 	if (len(image.shape)==3) & (len(Coords)==6):
 		croppedImage = image[Coords[0]:Coords[1],Coords[2]:Coords[3],Coords[4]:Coords[5]]
@@ -17,6 +33,26 @@ def crop_3D(image, Coords):
 		return croppedImage
 
 def uncrop_3D(image, Coords, originalSize):
+	"""
+    Reconstruct full size image from a cropped image
+        
+    Parameters
+    ----------
+    image : array_like
+        The image.
+    Coords : ndarray
+    	Coordenates of the bounding box: minimum and maximum columns, rows and 3rd dimension
+	originalSize : ndarray
+		Original size of the image from which the cropped image was taken
+
+    Returns
+    -------
+    uncroppedImage : array_like
+    	Original size image reconstructed from the cropped image
+    
+    """	
+
+
 	uncroppedImage = None
 	if (len(image.shape)==3) & (len(Coords)==6) & (len(originalSize)==3):
 		if (Coords[0]<originalSize[0]) & (Coords[1]<originalSize[0]) & (Coords[2]<originalSize[1]) & (Coords[3]<originalSize[1]) & (Coords[4]<originalSize[2]) & (Coords[5]<originalSize[2]): 
@@ -31,6 +67,25 @@ def uncrop_3D(image, Coords, originalSize):
 		return uncroppedImage		
 
 def bbox_3D(img):
+
+	"""
+    Get the bounding box of a segmented image
+        
+    Parameters
+    ----------
+    img : array_like
+        The image.
+
+    Returns
+    -------
+    rmin, rmax : ndarray
+        Row minimum and maximum
+    cmin, cmax : ndarray
+        Column minimum and maximum
+    zmin, zmax : 
+    	3rd dimension minimum and maximum
+
+    """
 
     r = np.any(img, axis=(1, 2))
     c = np.any(img, axis=(0, 2))
