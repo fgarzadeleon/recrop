@@ -2,14 +2,15 @@ from medpy.io import load
 from medpy.io import header
 from medpy.io import save
 import numpy as np
-import recrop
+import recrop as recrop
 
 
 	
 
 
 # Manually segmented fake lesion for use with this example
-image_file = 'manualTest.nii.gz'
+
+image_file = 'data/manualTest.nii.gz'
 image_data, image_header = load(image_file)
 
 # Provide the coordenates or calculate the bounding box of the segmentation

@@ -1,8 +1,12 @@
 ## recrop 
 
-Packages required `numpy`, to install type in the command line
+Packages required `numpy` and `medpy.io`, to install type in the command line
 
 `pip install numpy`
+
+and 
+
+`pip install medpy.io`
 
 ## Install the package
 
@@ -11,7 +15,7 @@ To install the package, type in your command line the following:
 `pip install recrop`
 
 ## Test file
-What we did with the file 
+We used publicly available data and created a manual lesion to work with. To create
 ### Data 
 The data used can be found at [http://hdl.handle.net/1926/1714](http://hdl.handle.net/1926/1714)
 

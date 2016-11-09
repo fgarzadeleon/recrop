@@ -67,7 +67,6 @@ def uncrop_3D(image, Coords, originalSize):
 		return uncroppedImage		
 
 def bbox_3D(img):
-
 	"""
     Get the bounding box of a segmented image
         
@@ -86,16 +85,15 @@ def bbox_3D(img):
     	3rd dimension minimum and maximum
 
     """
+	r = np.any(img, axis=(1, 2))
+	c = np.any(img, axis=(0, 2))
+	z = np.any(img, axis=(0, 1))
 
-    r = np.any(img, axis=(1, 2))
-    c = np.any(img, axis=(0, 2))
-    z = np.any(img, axis=(0, 1))
+	rmin, rmax = np.where(r)[0][[0, -1]]
+	cmin, cmax = np.where(c)[0][[0, -1]]
+	zmin, zmax = np.where(z)[0][[0, -1]]
 
-    rmin, rmax = np.where(r)[0][[0, -1]]
-    cmin, cmax = np.where(c)[0][[0, -1]]
-    zmin, zmax = np.where(z)[0][[0, -1]]
-
-    return rmin, rmax, cmin, cmax, zmin, zmax
+	return rmin, rmax, cmin, cmax, zmin, zmax
 
 def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
         """
@@ -158,6 +156,25 @@ def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
         return img, hdr
 
 def reconstruct_3D(*arg):
+	"""
+    Reconstruct full size image from a cropped image
+        
+    Parameters
+    ----------
+    image : array_like
+        The image.
+    Coords : ndarray
+    	Coordenates of the bounding box: minimum and maximum columns, rows and 3rd dimension
+	originalSize : ndarray
+		Original size of the image from which the cropped image was taken
+
+    Returns
+    -------
+    uncroppedImage : array_like
+    	Original size image reconstructed from the cropped image
+    
+    """	
+
 	uncroppedImage = None
 	if (len(arg)==2):
 		return "You need to supply the bounding box coordinates"
