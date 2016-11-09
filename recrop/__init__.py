@@ -139,17 +139,12 @@ def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
 
         newImageShape = img.shape
         old_pixel_spacing = header.get_pixel_spacing(hdr)
-
-        new_pixel_spacing = np.divide(np.multiply(oldImageShape,old_pixel_spacing),newImageShape)
-
+        new_pixel_spacing = np.round(np.divide(np.multiply(oldImageShape,old_pixel_spacing),newImageShape),7)
         print "Target Pixel Spacing"
         print target_spacing
 
         print "Actual Pixel Spacing"
         print new_pixel_spacing
-
-
-        
         # set new voxel spacing
         header.set_pixel_spacing(hdr, new_pixel_spacing)
         

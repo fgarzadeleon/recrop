@@ -4,10 +4,6 @@ from medpy.io import save
 import numpy as np
 import recrop as recrop
 
-
-	
-
-
 # Manually segmented fake lesion for use with this example
 
 image_file = 'data/manualTest.nii.gz'
@@ -25,6 +21,7 @@ croppedImage = recrop.crop_3D(image_data, coords2crop)
 print header.get_pixel_spacing(image_header)
 
 targetSpacing = 2.0
+targetSpacing = [2,1,1]
 
 # Resample from 
 croppedResampledImage, croppedResampledImage_header = recrop.resample(croppedImage, image_header,targetSpacing)

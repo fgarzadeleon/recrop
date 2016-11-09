@@ -42,6 +42,8 @@ image_data, image_header = load(image_file)
 #### Cropping an image
 To crop an image you must first provide the coordenates (two values per dimension) of the 3D box you want to crop. You can provide these manually or we `recrop.bbox_3D()` can find the minimum box that contains all the segmented regions.
 
+Using `recrop.crop_3D()` you provide the image data and the coordenates and it will output the cropped image. 
+
 ```python
 # Provide the coordenates or calculate the bounding box of the segmentation
 coords2crop = [0,10,0,10,0,10]
@@ -52,8 +54,21 @@ print coords2crop
 croppedImage = recrop.crop_3D(image_data, coords2crop)
 ```
 
+#### Chaging the resolution of an image
 
+From the `header` function of `medpy.io` we can obtain the current pixel spacing for each dimension.
 
+```python
+# Print the pixel spacing
+print header.get_pixel_spacing(image_header)
+
+targetSpacing = 2.0
+targetSpacing = [2.0, 1.0, 1.0]
+
+# Resample from 
+croppedResampledImage, croppedResampledImage_header = recrop.resample(croppedImage, image_header,targetSpacing)
+
+```
 
 
 ### Data 
