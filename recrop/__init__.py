@@ -156,13 +156,13 @@ def reconstruct_3D(*arg):
         
     Parameters
     ----------
-    image : array_like
-        The image.
-    Coords : ndarray
+    arg[0] : string
+        The path and image file name of the original image.
+    arg[1] : string
+    	The path and image file name of the segmented image.
+	arg[2]: ndarray
     	Coordenates of the bounding box: minimum and maximum columns, rows and 3rd dimension
-	originalSize : ndarray
-		Original size of the image from which the cropped image was taken
-
+	
     Returns
     -------
     uncroppedImage : array_like

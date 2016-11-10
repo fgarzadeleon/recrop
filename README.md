@@ -1,8 +1,8 @@
 # recrop
 
-`recrop` is a package aimed to reduce computational processing and time. It provides functions to crop images and reduce image resolutions for use in machine learning algorithms. In turn it provides functions to reconstruct the images into original sizes and resolutions.
+`recrop` is a package aimed at reducing computational processing and time. It provides functions to crop images and reduce image resolutions for use in machine learning algorithms. In turn it provides functions to reconstruct the images into original sizes and resolutions.
 
-## PAckages required 
+## Packages required 
 
 Packages required `numpy` and `medpy.io`, to install type in the command line
 
