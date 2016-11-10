@@ -18,6 +18,33 @@ To install the package, type in your command line the following:
 
 `pip install recrop`
 
+## Available functions
+```python
+crop_3D(image, Coords)
+```
+Crop an image image at the inputted coordenates
+
+```python
+uncrop_3D(image, Coords, originalSize)
+```
+Reconstruct full size image from a cropped image
+
+```python
+ bbox_3D(img)
+```
+Get the bounding box of a segmented image
+
+```python 
+resample(img, hdr, target_spacing, bspline_order=3, mode='constant')
+```
+
+Re-sample an image to a new voxel-spacing. Taken form medpy.io.
+
+```python
+reconstruct_3D(*arg)
+```
+Reconstruct full size image from a cropped image
+
 ## Test file & runthrough
 We used publicly available data and created a manual lesion to work with. 
 
