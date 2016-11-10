@@ -69,9 +69,72 @@ targetSpacing = [2.0, 1.0, 1.0]
 croppedResampledImage, croppedResampledImage_header = recrop.resample(croppedImage, image_header,targetSpacing)
 
 ```
+#### Saving the cropped and target spaced images
+
+You can save the the cropped and changed target space images with the `save` function from `medpy.io`.
+
+```python
+save(croppedImage, image_file[0:-7]+'.bbox.nii.gz', image_header)
+save(croppedResampledImage, image_file[0:-7]+'.bboxResample.nii.gz', croppedResampledImage_header)
+print 'Original:'
+print croppedImage.shape
+print 'Resampled:'
+print croppedResampledImage.shape
+```
+
+The output should be the following:
+
+```bash
+Original:
+(17, 25, 19)
+Resampled:
+(9, 25, 19)
+```
+
+As you can see by changing the image spacing we've changed the resolution of one dimension.
+
+#### Changing back to the original resolution
+
+The original target spacing was `1.0` so we use the `recrop.resample()` function to return it to its original spacing.
+
+```python
+targetSpacing = 1.0
+
+croppedRegeneratedImage, croppedRegeneratedImage_header = recrop.resample(croppedResampledImage, croppedResampledImage_header, targetSpacing)
+
+print 'Regenerated:'
+print croppedRegeneratedImage.shape
+
+save(croppedRegeneratedImage, image_file[0:-7]+'.bboxRegenerated.nii.gz', croppedRegeneratedImage_header)
+```
+The output should give you the size of the segmented image.
+
+```bash
+Regenerated:
+(17, 25, 19)
+```
+
+#### Taking the cropped image and making it the same size as the original image
+
+In some cases for comparison of the segmentations we want to take the smaller, cropped image and reconstruct it into the same size as the original image from which it was cropped.
+
+The functions `recrop.uncrop_3D()` or `recrop.reconstruct_3D()` generate the same size image from the original image, using the cropped image.
+
+```python
+uncroppedImage = recrop.uncrop_3D(croppedImage,coords2crop,image_data.shape)
+
+print 'Uncropped:'
+print uncroppedImage
+
+reconstructed = recrop.reconstruct_3D(image_file,image_file[0:-7]+'.bbox.nii.gz',coords2crop)
+
+save(reconstructed, image_file[0:-7]+'.rc.nii.gz', image_header)
+```
+
+The only difference between the two is the arguments you send to the functions. `recrop.uncrop_3D()` takes in similar arguments as before, the image, coordenates and size of the original image. Whilst `recrop.reconstruct_3D()` works with the filenames.
 
 
-### Data 
+## Data 
 The data used can be found at [http://hdl.handle.net/1926/1714](http://hdl.handle.net/1926/1714)
 
 Title: Lupus001

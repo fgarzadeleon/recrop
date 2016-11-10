@@ -97,7 +97,9 @@ def bbox_3D(img):
 
 def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
         """
-        Re-sample an image to a new voxel-spacing.
+        Re-sample an image to a new voxel-spacing. Taken form medpy.io.
+
+
         
         Parameters
         ----------
@@ -114,7 +116,7 @@ def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
             
         Warning
         -------
-        Voxel-spacing of input header will be modified in-place!
+        Voxel-spacing of input header will be modified in-place! If the target spacing can't be set exactly, for example in low pixel images, then the closest spacing will be chosen
             
         Returns
         -------
