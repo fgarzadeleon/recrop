@@ -198,5 +198,53 @@ def reconstruct_3D(*arg):
 		print "Too many arguments."
 	croppedImage = None
 
+def resize3D(img, target_size, bspline_order=3, mode='constant'):
+        """
+        Re-sample an image to a new voxel-spacing. Taken form medpy.io.
 
+
+        
+        Parameters
+        ----------
+        img : array_like
+            The image.
+        hdr : object
+            The image header.
+        target_spacing : number or sequence of numbers
+            The target voxel spacing to achieve. If a single number, isotropic spacing is assumed.
+        bspline_order : int
+            The bspline order used for interpolation.
+        mode : str
+            Points outside the boundaries of the input are filled according to the given mode ('constant', 'nearest', 'reflect' or 'wrap'). Default is 'constant'.
+            
+        Warning
+        -------
+        Voxel-spacing of input header will be modified in-place! If the target spacing can't be set exactly, for example in low pixel images, then the closest spacing will be chosen
+            
+        Returns
+        -------
+        img : ndarray
+            The re-sampled image.
+        hdr : object
+            The image header with the new voxel spacing.
+        """        
+        # compute zoom values
+        target_size = np.array(target_size, dtype=float)
+        image_shape = np.array(img.shape, dtype=float)
+        zoom_factors = np.divide(target_size,image_shape)
+        print "Target Size"
+        print target_size
+        
+
+        print "Zoom Factors"
+        print zoom_factors
+
+    
+        # zoom image
+        img = zoom(img, zoom_factors, order=bspline_order, mode=mode)
+
+        print "image_shape"
+        print img.shape
+
+        return img
 
